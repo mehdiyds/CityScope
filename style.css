@@ -1,0 +1,1119 @@
+/* ============================================
+   DESIGN SYSTEM — CityScope
+   ============================================ */
+
+/* Google Fonts & Variables globales */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --clr-bg:        #0a0f1e;
+    --clr-surface:   rgba(255, 255, 255, 0.06);
+    --clr-surface-2: rgba(255, 255, 255, 0.10);
+    --clr-border:    rgba(255, 255, 255, 0.12);
+    --clr-text:      #e8eaf0;
+    --clr-muted:     rgba(232, 234, 240, 0.55);
+    --clr-accent:    #4f8ef7;
+    --clr-accent-2:  #a78bfa;
+    --clr-hot:       #fb923c;
+    --clr-success:   #34d399;
+    --clr-error:     #f87171;
+    --radius-sm:     12px;
+    --radius-md:     20px;
+    --radius-lg:     28px;
+    --shadow-card:   0 8px 32px rgba(0, 0, 0, 0.35);
+    --transition:    all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--clr-bg);
+    color: var(--clr-text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* ============================================
+   ORBES DE FOND DÉCORATIFS
+   ============================================ */
+.bg-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+    z-index: 0;
+    pointer-events: none;
+    animation: float 8s ease-in-out infinite alternate;
+}
+.orb-1 { width: 600px; height: 600px; background: #4f8ef7; top: -200px; left: -200px; animation-delay: 0s; }
+.orb-2 { width: 500px; height: 500px; background: #a78bfa; bottom: -150px; right: -150px; animation-delay: -3s; }
+.orb-3 { width: 350px; height: 350px; background: #34d399; top: 40%; left: 50%; transform: translate(-50%, -50%); animation-delay: -6s; }
+
+@keyframes float {
+    from { transform: translateY(0) scale(1); }
+    to   { transform: translateY(-30px) scale(1.05); }
+}
+
+/* ============================================
+   MISE EN PAGE PRINCIPALE
+   ============================================ */
+.app-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+}
+
+/* ============================================
+   EN-TÊTE
+   ============================================ */
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo .material-symbols-rounded {
+    font-size: 32px;
+    color: var(--clr-accent);
+}
+
+.logo-text {
+    font-size: 22px;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--clr-accent), var(--clr-accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.main-nav {
+    display: flex;
+}
+
+.main-nav ul {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: var(--clr-text);
+    font-weight: 500;
+    font-size: 15px;
+    transition: color 0.3s ease;
+}
+
+.main-nav a:hover {
+    color: var(--clr-accent);
+}
+
+/* ============================================
+   SECTION RECHERCHE
+   ============================================ */
+.search-section {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.search-section h1 {
+    font-size: clamp(1.6rem, 4vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+.search-section .subtitle {
+    color: var(--clr-muted);
+    font-size: 1rem;
+    margin-bottom: 28px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--clr-surface-2);
+    border: 1px solid var(--clr-border);
+    border-radius: 50px;
+    padding: 6px 6px 6px 20px;
+    backdrop-filter: blur(20px);
+    max-width: 600px;
+    margin: 0 auto;
+    transition: var(--transition);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+.search-box:focus-within {
+    border-color: var(--clr-accent);
+    box-shadow: 0 4px 30px rgba(79, 142, 247, 0.25);
+}
+
+/* ============================================
+   AUTOCOMPLÉTION DES VILLES
+   ============================================ */
+.search-container {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.suggestions-list {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    background: var(--clr-surface-2);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    z-index: 100;
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+    max-height: 300px;
+    overflow-y: auto;
+    text-align: left;
+}
+
+.suggestions-list li {
+    padding: 12px 20px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: background 0.2s;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.suggestions-list li:last-child {
+    border-bottom: none;
+}
+
+.suggestions-list li:hover {
+    background: rgba(79, 142, 247, 0.1);
+}
+
+.suggestion-city {
+    font-weight: 600;
+    color: var(--clr-text);
+    font-size: 15px;
+}
+
+.suggestion-details {
+    font-size: 13px;
+    color: var(--clr-muted);
+}
+
+.search-icon {
+    color: var(--clr-muted);
+    font-size: 20px;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.search-box input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    color: var(--clr-text);
+}
+
+.search-box input::placeholder { color: var(--clr-muted); }
+
+.search-box button {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent-2));
+    color: white;
+    border: none;
+    border-radius: 44px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.search-box button:hover {
+    opacity: 0.9;
+    transform: scale(1.03);
+}
+
+.search-box button:active { transform: scale(0.97); }
+
+/* ============================================
+   FAVORIS
+   ============================================ */
+.favorites-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 28px;
+    justify-content: center;
+}
+
+.fav-card {
+    background: var(--clr-surface-2);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    backdrop-filter: blur(10px);
+}
+
+.fav-card:hover {
+    border-color: var(--clr-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79,142,247,0.2);
+}
+
+.fav-card-icon { width: 36px; height: 36px; }
+
+.fav-card-city { font-size: 13px; font-weight: 600; display: block; }
+
+.fav-card-temp {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--clr-hot);
+    display: block;
+}
+
+.fav-card-delete {
+    position: absolute;
+    top: -7px; right: -7px;
+    background: var(--clr-error);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px; height: 20px;
+    font-size: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.fav-card:hover .fav-card-delete { opacity: 1; }
+
+/* ============================================
+   LOADER
+   ============================================ */
+.loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 40px;
+    color: var(--clr-muted);
+}
+
+.spinner {
+    width: 44px; height: 44px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: var(--clr-accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.spinner.small {
+    width: 24px; height: 24px;
+    border-width: 2px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============================================
+   ERREUR
+   ============================================ */
+.error {
+    background: rgba(248, 113, 113, 0.12);
+    border: 1px solid rgba(248, 113, 113, 0.4);
+    color: var(--clr-error);
+    padding: 16px 20px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    animation: fadeSlide 0.3s ease;
+}
+
+/* ============================================
+   HERO DE LA VILLE
+   ============================================ */
+.city-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    padding: 0 4px;
+}
+
+.city-hero-text h2 {
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 800;
+    background: linear-gradient(90deg, #fff, var(--clr-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+}
+
+.local-time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--clr-muted);
+    font-size: 0.95rem;
+    margin-top: 6px;
+}
+
+.local-time .material-symbols-rounded {
+    font-size: 18px;
+    color: var(--clr-accent-2);
+}
+
+.favorite-btn {
+    background: var(--clr-surface-2);
+    border: 1px solid var(--clr-border);
+    border-radius: 50%;
+    width: 48px; height: 48px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.favorite-btn:hover { border-color: #f1c40f; transform: scale(1.1); }
+
+.favorite-btn .material-symbols-rounded {
+    font-size: 26px;
+    color: var(--clr-muted);
+    transition: color 0.3s;
+}
+
+.favorite-btn.active .material-symbols-rounded { color: #f1c40f; }
+
+/* ============================================
+   GRILLE INFO (Météo + Ville)
+   ============================================ */
+.results-container { animation: fadeSlide 0.5s ease; }
+
+@keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* ============================================
+   CARTES GÉNÉRIQUES
+   ============================================ */
+.info-card {
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-card);
+    transition: var(--transition);
+}
+
+.info-card:hover {
+    border-color: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
+.card-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--clr-muted);
+    margin-bottom: 20px;
+}
+
+.card-label .material-symbols-rounded {
+    font-size: 18px;
+    color: var(--clr-accent);
+}
+
+/* ============================================
+   CARTE MÉTÉO
+   ============================================ */
+.weather-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+#weather-icon { width: 80px; height: 80px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); }
+
+.temp-block { display: flex; align-items: flex-start; line-height: 1; }
+
+.temperature {
+    font-size: 64px;
+    font-weight: 800;
+    color: white;
+}
+
+.temp-unit {
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--clr-muted);
+    margin-top: 10px;
+}
+
+.weather-desc {
+    font-size: 1rem;
+    color: var(--clr-muted);
+    margin-bottom: 24px;
+    text-transform: capitalize;
+}
+
+.weather-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    border-top: 1px solid var(--clr-border);
+    padding-top: 20px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stat-icon {
+    font-size: 22px;
+    color: var(--clr-accent);
+    background: rgba(79,142,247,0.12);
+    border-radius: 10px;
+    padding: 6px;
+}
+
+.stat-label {
+    display: block;
+    font-size: 11px;
+    color: var(--clr-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--clr-text);
+}
+
+/* ============================================
+   CARTE PRÉVISIONS 5 JOURS
+   ============================================ */
+.forecast-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+.forecast-card {
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.forecast-card:hover {
+    border-color: var(--clr-accent);
+    background: rgba(79,142,247,0.08);
+}
+
+.forecast-day {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--clr-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.forecast-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 6px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.forecast-temp {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--clr-text);
+    margin-bottom: 4px;
+}
+
+.forecast-temp-min {
+    font-size: 11px;
+    color: var(--clr-muted);
+}
+
+.forecast-desc {
+    font-size: 10px;
+    color: var(--clr-muted);
+    margin-top: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ============================================
+   CARTE INFOS VILLE
+   ============================================ */
+.city-info-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.city-info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.ci-icon {
+    font-size: 20px;
+    color: var(--clr-accent-2);
+    background: rgba(167,139,250,0.12);
+    border-radius: 8px;
+    padding: 5px;
+    flex-shrink: 0;
+}
+
+.ci-label {
+    display: block;
+    font-size: 11px;
+    color: var(--clr-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.ci-value {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--clr-text);
+}
+
+/* ============================================
+   SECTION ATTRACTIONS
+   ============================================ */
+.card-attractions {
+    margin-top: 0;
+}
+
+.attractions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.attractions-loading {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 24px 0;
+    color: var(--clr-muted);
+}
+
+/* Carte d'attraction */
+.attraction-card {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--clr-surface-2);
+    border: 1px solid var(--clr-border);
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.attraction-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--clr-accent);
+    box-shadow: 0 12px 30px rgba(79,142,247,0.2);
+}
+
+.attraction-img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+    background: var(--clr-surface-2);
+}
+
+.attraction-img-placeholder {
+    width: 100%;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--clr-surface-2);
+}
+
+.attraction-img-placeholder .material-symbols-rounded {
+    font-size: 40px;
+    color: var(--clr-muted);
+}
+
+.attraction-body {
+    padding: 14px;
+}
+
+.attraction-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.attraction-desc {
+    font-size: 12px;
+    color: var(--clr-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.5;
+}
+
+.attraction-link {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--clr-accent);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+}
+
+.attraction-link .material-symbols-rounded { font-size: 14px; }
+
+/* ============================================
+   SECTION GUIDES TOURISTIQUES
+   ============================================ */
+
+.guides-section {
+    margin-top: 40px;
+    padding: 32px;
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+}
+
+.guides-section h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--clr-text);
+}
+
+.guide-form-card {
+    background: var(--clr-surface-2);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    padding: 24px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-row .full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--clr-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 12px;
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-sm);
+    color: var(--clr-text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--clr-muted);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--clr-accent);
+    box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.btn-find-guide {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #a78bfa 0%, var(--clr-accent) 100%);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 8px;
+}
+
+.btn-find-guide:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(167, 139, 250, 0.3);
+}
+
+.btn-find-guide:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.guide-message {
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    text-align: center;
+    transition: var(--transition);
+    margin-top: 12px;
+}
+
+.guide-message.success {
+    background: rgba(52, 211, 153, 0.2);
+    color: var(--clr-success);
+    border: 1px solid var(--clr-success);
+}
+
+.guide-message.error {
+    background: rgba(248, 113, 113, 0.2);
+    color: var(--clr-error);
+    border: 1px solid var(--clr-error);
+}
+
+/* ============================================
+   SECTION PHOTOTHÈQUE (Galerie participative)
+   ============================================ */
+
+.photos-section {
+    margin-top: 40px;
+    padding: 32px;
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+}
+
+.photos-section h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--clr-text);
+}
+
+/* ─── Formulaire d'upload ─────────────────── */
+.upload-form-card {
+    background: var(--clr-surface-2);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    margin-top: 40px;
+    margin-bottom: 32px;
+}
+
+.upload-form-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    color: var(--clr-text);
+}
+
+#upload-photo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+#upload-photo-form input,
+#upload-photo-form textarea {
+    padding: 12px;
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-sm);
+    color: var(--clr-text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+#upload-photo-form input::placeholder,
+#upload-photo-form textarea::placeholder {
+    color: var(--clr-muted);
+}
+
+#upload-photo-form input:focus,
+#upload-photo-form textarea:focus {
+    outline: none;
+    border-color: var(--clr-accent);
+    box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.1);
+}
+
+#upload-photo-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+#upload-photo-form input[type="file"] {
+    padding: 8px;
+    cursor: pointer;
+}
+
+#submit-photo-btn {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, var(--clr-accent) 0%, var(--clr-accent-2) 100%);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    align-self: flex-start;
+}
+
+#submit-photo-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(79, 142, 247, 0.3);
+}
+
+#submit-photo-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ─── Message de statut ────────────────────── */
+.upload-message {
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.upload-message.success {
+    background: rgba(52, 211, 153, 0.2);
+    color: var(--clr-success);
+    border: 1px solid var(--clr-success);
+}
+
+.upload-message.error {
+    background: rgba(248, 113, 113, 0.2);
+    color: var(--clr-error);
+    border: 1px solid var(--clr-error);
+}
+
+/* ─── Galerie Grid ────────────────────────── */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.photo-card {
+    background: var(--clr-surface-2);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: var(--transition);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.photo-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--clr-accent);
+    box-shadow: 0 12px 32px rgba(79, 142, 247, 0.2);
+}
+
+.photo-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    background: var(--clr-surface);
+}
+
+/* ─── Cartes contenu texte ────────────────── */
+.photo-card-body {
+    padding: 14px;
+}
+
+.photo-card-user {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--clr-accent);
+    margin-bottom: 8px;
+}
+
+.photo-card-desc {
+    font-size: 13px;
+    color: var(--clr-text);
+    margin-bottom: 10px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.photo-card-date {
+    font-size: 11px;
+    color: var(--clr-muted);
+    font-weight: 500;
+}
+
+/* ============================================
+   UTILITAIRE
+   ============================================ */
+.hidden { display: none !important; }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 680px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    .attractions-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+    .forecast-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    .photos-section {
+        padding: 20px;
+    }
+    .guides-section {
+        padding: 20px;
+    }
+    .guide-form-card {
+        padding: 16px;
+    }
+    .upload-form-card {
+        padding: 16px;
+    }
+    .search-box { padding: 4px 4px 4px 16px; }
+    .search-box button { padding: 10px 18px; font-size: 14px; }
+    .temperature { font-size: 52px; }
+}
+
+@media (max-width: 420px) {
+    .attractions-grid { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .forecast-grid { grid-template-columns: repeat(2, 1fr); }
+    .guides-section h3 { font-size: 18px; }
+    .city-hero-text h2 { font-size: 1.8rem; }
+    .photos-section h3 { font-size: 18px; }
+}
+

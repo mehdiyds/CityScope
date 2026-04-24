@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Découvrez la météo, les informations générales et les attractions touristiques de n'importe quelle ville dans le monde.">
+    <title>CityScope — Météo & Découverte</title>
+    <link rel="stylesheet" href="style.css?v=6">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Icônes Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Orbes décoratifs de fond -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <div class="app-wrapper">
+
+        <!-- ======== EN-TÊTE ======== -->
+        <header class="app-header">
+            <div class="logo">
+                <span class="material-symbols-rounded">partly_cloudy_day</span>
+                <span class="logo-text">CityScope</span>
+            </div>
+            <nav id="main-nav" class="main-nav hidden">
+                <ul>
+                    <li><a href="#search-section">Recherche</a></li>
+                    <li><a href="#weather-card">Météo</a></li>
+                    <li><a href="#city-info-card">Informations</a></li>
+                    <li><a href="#city-photos-section">Photos</a></li>
+                    <li><a href="#guides-section">Guides</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- ======== BARRE DE RECHERCHE ======== -->
+        <section id="search-section" class="search-section">
+            <h1>Explorez le monde, une ville à la fois</h1>
+            <p class="subtitle">Indiquez la ville et son pays (ex: Paris, FR ou Paris, US) pour plus de précision.</p>
+            <div class="search-container" style="position: relative; max-width: 600px; margin: 0 auto;">
+                <div class="search-box" style="margin: 0;">
+                    <span class="material-symbols-rounded search-icon">search</span>
+                    <input type="text" id="city-input" placeholder="Ville, Code Pays (ex: London, GB)..." autocomplete="off">
+                    <button id="search-btn">Rechercher</button>
+                </div>
+                <!-- Liste des suggestions -->
+                <ul id="suggestions-list" class="suggestions-list hidden"></ul>
+            </div>
+        </section>
+
+        <!-- ======== FAVORIS ======== -->
+        <div id="favorites-container" class="favorites-container"></div>
+
+        <!-- ======== MESSAGE D'ERREUR ======== -->
+        <div id="error-message" class="error hidden">
+            <span class="material-symbols-rounded">error</span>
+            <span id="error-text"></span>
+        </div>
+
+        <!-- ======== LOADER ======== -->
+        <div id="loader" class="loader hidden">
+            <div class="spinner"></div>
+            <p>Chargement en cours...</p>
+        </div>
+
+        <!-- ======== RÉSULTATS PRINCIPAUX ======== -->
+        <main id="results-container" class="results-container hidden">
+
+            <!-- Nom de la ville + heure locale + étoile -->
+            <div class="city-hero">
+                <div class="city-hero-text">
+                    <h2 id="city-name">--</h2>
+                    <p id="local-time-display" class="local-time">
+                        <span class="material-symbols-rounded">schedule</span>
+                        <span id="local-time">--</span>
+                    </p>
+                </div>
+                <button id="favorite-btn" class="favorite-btn hidden" title="Ajouter / Retirer des favoris">
+                    <span class="material-symbols-rounded" id="fav-icon">star</span>
+                </button>
+            </div>
+
+            <!-- ======== GRILLE DES 3 SECTIONS ======== -->
+            <div class="info-grid">
+
+                <!-- SECTION 1 : MÉTÉO -->
+                <div class="info-card card-weather" id="weather-card">
+                    <div class="card-label">
+                        <span class="material-symbols-rounded">cloud</span>
+                        Météo Actuelle
+                    </div>
+                    <div class="weather-main">
+                        <img id="weather-icon" src="" alt="Icône météo" class="hidden">
+                        <div class="temp-block">
+                            <span id="temp" class="temperature">--</span>
+                            <span class="temp-unit">°C</span>
+                        </div>
+                    </div>
+                    <p id="weather-desc" class="weather-desc">--</p>
+                    <div class="weather-stats">
+                        <div class="stat-item">
+                            <span class="material-symbols-rounded stat-icon">water_drop</span>
+                            <div>
+                                <span class="stat-label">Humidité</span>
+                                <span class="stat-value"><span id="humidity">--</span>%</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="material-symbols-rounded stat-icon">air</span>
+                            <div>
+                                <span class="stat-label">Vent</span>
+                                <span class="stat-value"><span id="wind">--</span> km/h</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="material-symbols-rounded stat-icon">thermostat</span>
+                            <div>
+                                <span class="stat-label">Ressenti</span>
+                                <span class="stat-value"><span id="feels-like">--</span>°C</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="material-symbols-rounded stat-icon">visibility</span>
+                            <div>
+                                <span class="stat-label">Visibilité</span>
+                                <span class="stat-value"><span id="visibility">--</span> km</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prévisions 5 jours dans la même carte -->
+                    <div style="border-top: 1px solid var(--clr-border); margin-top: 20px; padding-top: 20px;">
+                        <div style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: var(--clr-muted); margin-bottom: 16px;">
+                            <span class="material-symbols-rounded" style="vertical-align: middle; font-size: 16px; margin-right: 6px;">calendar_month</span>
+                            Prévisions 5 Jours
+                        </div>
+                        <div class="forecast-grid" id="forecast-grid">
+                            <!-- Les cartes de prévisions seront injectées ici par JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2 : INFORMATIONS GÉNÉRALES -->
+                <div class="info-card card-city" id="city-info-card">
+                    <div class="card-label">
+                        <span class="material-symbols-rounded">location_city</span>
+                        Informations Générales
+                    </div>
+                    <ul class="city-info-list">
+                        <li class="city-info-item">
+                            <span class="material-symbols-rounded ci-icon">flag</span>
+                            <div>
+                                <span class="ci-label">Pays</span>
+                                <span class="ci-value" id="country-full">--</span>
+                            </div>
+                        </li>
+                        <li class="city-info-item">
+                            <span class="material-symbols-rounded ci-icon">public</span>
+                            <div>
+                                <span class="ci-label">Continent</span>
+                                <span class="ci-value" id="continent">--</span>
+                            </div>
+                        </li>
+                        <li class="city-info-item">
+                            <span class="material-symbols-rounded ci-icon">groups</span>
+                            <div>
+                                <span class="ci-label">Population du pays</span>
+                                <span class="ci-value" id="population">--</span>
+                            </div>
+                        </li>
+                        <li class="city-info-item">
+                            <span class="material-symbols-rounded ci-icon">map</span>
+                            <div>
+                                <span class="ci-label">Région / Capitale</span>
+                                <span class="ci-value" id="region">--</span>
+                            </div>
+                        </li>
+                        <li class="city-info-item">
+                            <span class="material-symbols-rounded ci-icon">payments</span>
+                            <div>
+                                <span class="ci-label">Monnaie</span>
+                                <span class="ci-value" id="currency">--</span>
+                            </div>
+                        </li>
+                        <li class="city-info-item">
+                            <span class="material-symbols-rounded ci-icon">translate</span>
+                            <div>
+                                <span class="ci-label">Langue(s) officielle(s)</span>
+                                <span class="ci-value" id="languages">--</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div><!-- fin info-grid -->
+
+            
+<!-- Nouvelle section pour les photos (remplace les attractions) -->
+            <div id="city-photos-section" class="photos-section hidden">
+                <h3>📸 Photos de <span id="photo-section-city-label"></span></h3>
+                
+                <!-- Galerie d'images en grille -->
+                <div id="photos-gallery" class="gallery-grid">
+                    <!-- Les cartes images seront injectées ici par JavaScript -->
+                </div>
+
+                <!-- Formulaire d'envoi -->
+                <div class="upload-form-card">
+                    <h4>Contribuer : Ajouter une photo de cette ville</h4>
+                    <form id="upload-photo-form" enctype="multipart/form-data">
+                        <input type="text" id="photo-city" name="city" readonly required title="La ville est liée automatiquement à votre recherche">
+                        <input type="text" id="photo-username" name="username" placeholder="Votre nom d'utilisateur (requis)" required>
+                        <textarea id="photo-desc" name="description" placeholder="Description de la photo (optionnel)"></textarea>
+                        <input type="file" id="photo-file" name="photo" accept=".png, .jpg, .jpeg" required>
+                        <button type="submit" id="submit-photo-btn">Ajouter la photo</button>
+                        <div id="upload-message" class="upload-message hidden"></div>
+                    </form>
+                </div>
+            </div>
+
+<!-- NOUVELLE SECTION : TROUVER UN GUIDE -->
+            <div id="guides-section" class="guides-section hidden">
+                <h3>🧭 Trouver un Guide Touristique</h3>
+                
+                <div class="guide-form-card">
+                    <form id="find-guide-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="guide-language">Langue du Guide</label>
+                                <select id="guide-language" name="language" required>
+                                    <option value="">-- Sélectionnez une langue --</option>
+                                    <option value="fr">Français</option>
+                                    <option value="en">Anglais</option>
+                                    <option value="es">Espagnol</option>
+                                    <option value="de">Allemand</option>
+                                    <option value="it">Italien</option>
+                                    <option value="pt">Portugais</option>
+                                    <option value="ja">Japonais</option>
+                                    <option value="zh">Chinois</option>
+                                    <option value="ar">Arabe</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="guide-type">Type de Visite</label>
+                                <select id="guide-type" name="type" required>
+                                    <option value="">-- Sélectionnez un type --</option>
+                                    <option value="history">🏛️ Histoire & Culture</option>
+                                    <option value="gastronomy">🍽️ Gastronomie</option>
+                                    <option value="nature">🌿 Nature & Randonnée</option>
+                                    <option value="adventure">⛰️ Aventure & Adrénaline</option>
+                                    <option value="art">🎨 Art & Musées</option>
+                                    <option value="photography">📷 Photographie</option>
+                                    <option value="luxury">✨ Luxe & Premium</option>
+                                    <option value="family">👨‍👩‍👧‍👦 Famille</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="guide-people">Nombre de Personnes</label>
+                                <input type="number" id="guide-people" name="people" min="1" max="20" placeholder="Ex: 2" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="guide-budget">Budget (€)</label>
+                                <input type="number" id="guide-budget" name="budget" min="0" step="10" placeholder="Ex: 500" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="guide-date">Date de Début</label>
+                                <input type="date" id="guide-date" name="date" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="guide-duration">Durée du Tour</label>
+                                <select id="guide-duration" name="duration" required>
+                                    <option value="">-- Sélectionnez une durée --</option>
+                                    <option value="1_day">1 jour</option>
+                                    <option value="2_days">2 jours</option>
+                                    <option value="3_days">3 jours</option>
+                                    <option value="1_week">1 semaine</option>
+                                    <option value="2_weeks">2 semaines</option>
+                                    <option value="custom">Sur mesure</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="guide-email">Votre Email</label>
+                                <input type="email" id="guide-email" name="email" placeholder="votre.email@example.com" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="guide-notes">Notes Additionnelles (optionnel)</label>
+                                <textarea id="guide-notes" name="notes" placeholder="Décrivez vos préférences, restrictions, ou demandes spéciales..."></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-find-guide">Chercher un Guide</button>
+                        <div id="guide-message" class="guide-message hidden"></div>
+                    </form>
+                </div>
+            </div>
+
+        </main><!-- fin results-container -->
+
+    </div><!-- fin app-wrapper -->
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
