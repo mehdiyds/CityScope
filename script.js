@@ -1,13 +1,8 @@
-// ============================================================
-// METEOVILE — script.js
-// ============================================================
 // APIs utilisées :
 //  1. OpenWeatherMap  → Météo actuelle + décalage horaire
 //  2. RestCountries   → Monnaie, langue, population, continent
 //  3. Wikipedia       → Attractions touristiques + images
-// ============================================================
 
-// ── CONFIGURATION ───────────────────────────────────────────
 const OWM_KEY = '3773389bf74d8841181351a067dfcb83'; // OpenWeatherMap API Key
 
 // ── SÉLECTION DES ÉLÉMENTS DOM ──────────────────────────────
@@ -77,12 +72,13 @@ async function search(city) {
         // ── ÉTAPE 2 : APIs parallèles
         const countryCode = weatherData.sys.country; // ex: "FR"
         const cityName    = weatherData.name;         // Nom normalisé
+        const fullCityName = `${cityName}, ${countryCode}`; // Nom complet avec pays
         // Coordonnées lat/lon de la ville (fournies par OpenWeatherMap)
         const lat = weatherData.coord.lat;
         const lon = weatherData.coord.lon;
 
         // Stocker la ville pour le formulaire de guide
-        currentSearchCity = cityName;
+        currentSearchCity = fullCityName;
 
         const countryData = await fetchCountryInfo(countryCode);
         const forecastData = await fetchForecast(lat, lon);
@@ -101,7 +97,7 @@ async function search(city) {
         showLoader(false);
         resultsContainer.classList.remove('hidden');
         document.getElementById('main-nav')?.classList.remove('hidden');
-        checkIfFavorite(cityName);
+        checkIfFavorite(fullCityName);
 
     } catch (err) {
         showLoader(false);
@@ -558,9 +554,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     const url = `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=5&appid=${OWM_KEY}`;
                     const res = await fetch(url);
                     const data = await res.json();
-                    
+
+
+                    /*update*/
+
+
                     if (data && data.length > 0 && suggestionsList) {
-                        suggestionsList.innerHTML = data.map(place => {
+                        // Dédupliquer les suggestions basées sur (name + state + country)
+                        const uniqueSuggestions = new Map();
+                        
+                        data.forEach(place => {
+                            const state = place.state ? `${place.state}` : '';
+                            const key = `${place.name}|${state}|${place.country}`;
+                            
+                            if (!uniqueSuggestions.has(key)) {
+                                uniqueSuggestions.set(key, place);
+                            }
+                        });
+                        
+                        suggestionsList.innerHTML = Array.from(uniqueSuggestions.values()).map(place => {
                             const state = place.state ? `${place.state}` : '';
                             const searchString = `${place.name},${state ? ' ' + state + ',' : ''} ${place.country}`.replace(/'/g, "\\'");
                             
@@ -590,7 +602,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (favoriteBtn) {
         favoriteBtn.addEventListener('click', async () => {
-            const cityName = cityNameEl.textContent.split(',')[0].trim();
+            const cityName = cityNameEl.textContent.trim();
             try {
                 const result = await toggleFavoriteAPI(cityName);
                 if (!result) {
