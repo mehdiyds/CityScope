@@ -51,8 +51,3 @@ CREATE TABLE IF NOT EXISTS guide_unavailabilities (
     UNIQUE (guide_id, unavailable_date)
 );
 
-INSERT INTO guides (name, city, languages) VALUES 
-('Jean Dupont', 'Paris, FR', 'Français, Anglais'),
-('Marie Curie', 'Paris, FR', 'Français, Espagnol'),
-('John Smith', 'London, GB', 'Anglais'),
-('Kenji Sato', 'Tokyo, JP', 'Japonais, Anglais');

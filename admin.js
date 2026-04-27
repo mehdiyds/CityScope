@@ -47,65 +47,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // === GESTION PHOTOS ===
     const cityInput = document.getElementById('admin-city-input');
     const searchBtn = document.getElementById('admin-search-btn');
-    const suggestionsList = document.getElementById('admin-suggestions-list');
     const photosContainer = document.getElementById('admin-photos-container');
-    let debounceTimer;
-
-    // Autocompletion reuse
-    cityInput.addEventListener('input', (e) => {
-        const query = e.target.value.trim();
-        if (query.length < 3) {
-            suggestionsList.classList.add('hidden');
-            return;
-        }
-
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(async () => {
-            try {
-                // OpenWeather Geo API (assuming your api key is the public free tier normally used here)
-                // We'll just fetch from it directly if possible, or assume simple logic for demo.
-                // In your main script, you probably fetched this way:
-                const appid = "2d0c2ee53896567facada5b931dcbaec"; // A standard test key / insert the real one from script.js
-                const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=5&appid=${appid}`);
-                const data = await response.json();
-                
-                suggestionsList.innerHTML = '';
-                if (data.length === 0) {
-                    suggestionsList.classList.add('hidden');
-                    return;
-                }
-
-                data.forEach(item => {
-                    const li = document.createElement('li');
-                    li.className = 'suggestion-item';
-                    const country = item.country || '';
-                    const state = item.state ? `, ${item.state}` : '';
-                    const fullName = `${item.name}${state}, ${country}`;
-                    
-                    li.innerHTML = `
-                        <div class="suggestion-city">${item.name}</div>
-                        <div class="suggestion-details">${country}${item.state ? ' - ' + item.state : ''}</div>
-                    `;
-                    
-                    li.addEventListener('click', () => {
-                        cityInput.value = `${item.name}, ${country}`;
-                        suggestionsList.classList.add('hidden');
-                        fetchCityPhotos(cityInput.value);
-                    });
-                    
-                    suggestionsList.appendChild(li);
-                });
-                
-                suggestionsList.classList.remove('hidden');
-            } catch (err) {
-                console.error("Autocompletion error:", err);
-            }
-        }, 400);
-    });
 
     searchBtn.addEventListener('click', () => {
         if(cityInput.value) {
             fetchCityPhotos(cityInput.value);
+        }
+    });
+
+    // Enter key to search
+    cityInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            searchBtn.click();
         }
     });
 
